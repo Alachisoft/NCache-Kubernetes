@@ -1,0 +1,18 @@
+# Headless Service for auto discovery of cache server nodes for client applications
+kind: Service
+apiVersion: v1 # depends on the underlying Kubernetes version
+metadata:
+  name: cacheserver
+  labels:
+    app: cacheserver
+spec:
+  clusterIP: None
+  selector:
+    app: ncache # same label as provided in the ncache.yaml file
+  ports:
+  - name: management-tcp
+    port: 8250
+    targetPort: 8250
+  - name: client-port
+    port: 9800
+    targetPort: 9800

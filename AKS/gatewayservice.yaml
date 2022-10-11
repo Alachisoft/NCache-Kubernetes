@@ -1,0 +1,14 @@
+# Gateway service to access, manage and monitor NCache from your workstation
+kind: Service
+apiVersion: v1 # depends on the underlying Kubernetes version
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: ncache # same label as provided in the ncache.yml file
+  type: LoadBalancer
+  sessionAffinity: ClientIP
+  ports:
+  - name: management-http
+    port: 8251
+    targetPort: 8251
