@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ncache
+  labels:
+    app: ncache
+spec:
+  serviceName: ncache
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ncache
+  template:
+    metadata:
+      labels:
+        app: ncache
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      imagePullSecrets:
+      - name: ncache-secret
+      containers:
+      - name: ncache
+        image: docker.io/ncachedev/ncachetest:5.3.603-OSS-RC92
+        ports:
+        - name: management-tcp
+          containerPort: 9803
+        - name: client-port
+          containerPort: 9800
+        - name: cache-port1
+          containerPort: 9831
+        - name: cache-port2
+          containerPort: 9832
