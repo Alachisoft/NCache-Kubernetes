@@ -18,10 +18,11 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       imagePullSecrets:
-      - name: ncache-secret
+      - name: ncache-secret # Login for a private registry. Not needed for the public alachisoft/ncache image
+
       containers:
       - name: ncache
-        image: docker.io/ncachedev/ncachetest:5.3.603-OSS-RC92
+        image: docker.io/alachisoft/ncache:5.3.603-oss # Replace with your own image built on NCache if you use one
         ports:
         - name: management-tcp
           containerPort: 9803
