@@ -1,0 +1,36 @@
+# myapp: 2 replicas. No node-affinity to ncache-client anymore - that only
+# made sense while ncache-client ran one pod per node (its old DaemonSet
+# behavior); it's now a single pod, so there's no per-node pairing to test.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp
+          image: ${APP_IMAGE}
+          imagePullPolicy: Never # image is pre-loaded on every node, no registry
+          command: ["sleep", "infinity"] # run the sample manually via kubectl exec
+          env:
+            - name: NCACHE_CLIENT_HOST # the local client cache, NOT the remote server
+              value: "ncache-client"
+---
+# myapp Service: headless, no ports - nothing ever connects to myapp, this
+# just makes it addressable/discoverable.
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  clusterIP: None
+  selector:
+    app: myapp

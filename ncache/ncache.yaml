@@ -1,6 +1,6 @@
 # NCache Cache Server Deployment
 kind: Deployment
-apiVersion: apps/v1 # depends on the underlying Kubernetes version
+apiVersion: apps/v1
 metadata:
   name: ncache
   labels:
@@ -17,9 +17,11 @@ spec:
     spec:
       nodeSelector:
         "kubernetes.io/os": linux
+      env:
+        NC_KEY: "${NCACHE_KEY}"
       containers:
       - name: ncache
-        image: docker.io/alachisoft/ncache:enterprise-server-linux-5.3.1
+        image: ${IMAGE_REPOSITORY}:${IMAGE_TAG}
         #resources:
         #  limits:
         #    memory: "200Mi"
@@ -28,11 +30,13 @@ spec:
         #    memory: "100Mi"
         #    cpu: "1"
         ports:
-        - name: management-tcp
-          containerPort: 8250
-        - name: management-http
-          containerPort: 8251
-        - name: client-port
+        - name: client-tcp
           containerPort: 9800
-        - name: management-bridge
-          containerPort: 8260
+        - name: management-http
+          containerPort: 9801
+        - name: management-tcp
+          containerPort: 9803
+        - name: bridge-client
+          containerPort: 9816
+        - name: bridge-management
+          containerPort: 9817
