@@ -1,0 +1,604 @@
+# NCache client gateway. Matches the Helm chart (deployment.platform=AKS, default values).
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ncache-client-gateway
+  namespace: default
+  labels:
+    app: ncache
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "false"
+spec:
+  type: LoadBalancer
+  selector:
+    app: ncache
+  ports:
+    - name: client
+      port: 9800
+      targetPort: 9800
+    - name: ncache-9803
+      port: 9803
+      targetPort: 9803
+    - name: ncache-9804
+      port: 9804
+      targetPort: 9804
+    - name: ncache-9805
+      port: 9805
+      targetPort: 9805
+    - name: ncache-9806
+      port: 9806
+      targetPort: 9806
+    - name: ncache-9807
+      port: 9807
+      targetPort: 9807
+    - name: ncache-9808
+      port: 9808
+      targetPort: 9808
+    - name: ncache-9809
+      port: 9809
+      targetPort: 9809
+    - name: ncache-9810
+      port: 9810
+      targetPort: 9810
+    - name: ncache-9811
+      port: 9811
+      targetPort: 9811
+    - name: ncache-9812
+      port: 9812
+      targetPort: 9812
+    - name: ncache-9813
+      port: 9813
+      targetPort: 9813
+    - name: ncache-9814
+      port: 9814
+      targetPort: 9814
+    - name: ncache-9815
+      port: 9815
+      targetPort: 9815
+    - name: ncache-9816
+      port: 9816
+      targetPort: 9816
+    - name: ncache-9817
+      port: 9817
+      targetPort: 9817
+    - name: ncache-9818
+      port: 9818
+      targetPort: 9818
+    - name: ncache-9819
+      port: 9819
+      targetPort: 9819
+    - name: ncache-9820
+      port: 9820
+      targetPort: 9820
+    - name: ncache-9821
+      port: 9821
+      targetPort: 9821
+    - name: ncache-9822
+      port: 9822
+      targetPort: 9822
+    - name: ncache-9823
+      port: 9823
+      targetPort: 9823
+    - name: ncache-9824
+      port: 9824
+      targetPort: 9824
+    - name: ncache-9825
+      port: 9825
+      targetPort: 9825
+    - name: ncache-9826
+      port: 9826
+      targetPort: 9826
+    - name: ncache-9827
+      port: 9827
+      targetPort: 9827
+    - name: ncache-9828
+      port: 9828
+      targetPort: 9828
+    - name: ncache-9829
+      port: 9829
+      targetPort: 9829
+    - name: ncache-9830
+      port: 9830
+      targetPort: 9830
+    - name: ncache-9831
+      port: 9831
+      targetPort: 9831
+    - name: ncache-9832
+      port: 9832
+      targetPort: 9832
+    - name: ncache-9833
+      port: 9833
+      targetPort: 9833
+    - name: ncache-9834
+      port: 9834
+      targetPort: 9834
+    - name: ncache-9835
+      port: 9835
+      targetPort: 9835
+    - name: ncache-9836
+      port: 9836
+      targetPort: 9836
+    - name: ncache-9837
+      port: 9837
+      targetPort: 9837
+    - name: ncache-9838
+      port: 9838
+      targetPort: 9838
+    - name: ncache-9839
+      port: 9839
+      targetPort: 9839
+    - name: ncache-9840
+      port: 9840
+      targetPort: 9840
+    - name: ncache-9841
+      port: 9841
+      targetPort: 9841
+    - name: ncache-9842
+      port: 9842
+      targetPort: 9842
+    - name: ncache-9843
+      port: 9843
+      targetPort: 9843
+    - name: ncache-9844
+      port: 9844
+      targetPort: 9844
+    - name: ncache-9845
+      port: 9845
+      targetPort: 9845
+    - name: ncache-9846
+      port: 9846
+      targetPort: 9846
+    - name: ncache-9847
+      port: 9847
+      targetPort: 9847
+    - name: ncache-9848
+      port: 9848
+      targetPort: 9848
+    - name: ncache-9849
+      port: 9849
+      targetPort: 9849
+    - name: ncache-9850
+      port: 9850
+      targetPort: 9850
+    - name: ncache-9851
+      port: 9851
+      targetPort: 9851
+    - name: ncache-9852
+      port: 9852
+      targetPort: 9852
+    - name: ncache-9853
+      port: 9853
+      targetPort: 9853
+    - name: ncache-9854
+      port: 9854
+      targetPort: 9854
+    - name: ncache-9855
+      port: 9855
+      targetPort: 9855
+    - name: ncache-9856
+      port: 9856
+      targetPort: 9856
+    - name: ncache-9857
+      port: 9857
+      targetPort: 9857
+    - name: ncache-9858
+      port: 9858
+      targetPort: 9858
+    - name: ncache-9859
+      port: 9859
+      targetPort: 9859
+    - name: ncache-9860
+      port: 9860
+      targetPort: 9860
+    - name: ncache-9861
+      port: 9861
+      targetPort: 9861
+    - name: ncache-9862
+      port: 9862
+      targetPort: 9862
+    - name: ncache-9863
+      port: 9863
+      targetPort: 9863
+    - name: ncache-9864
+      port: 9864
+      targetPort: 9864
+    - name: ncache-9865
+      port: 9865
+      targetPort: 9865
+    - name: ncache-9866
+      port: 9866
+      targetPort: 9866
+    - name: ncache-9867
+      port: 9867
+      targetPort: 9867
+    - name: ncache-9868
+      port: 9868
+      targetPort: 9868
+    - name: ncache-9869
+      port: 9869
+      targetPort: 9869
+    - name: ncache-9870
+      port: 9870
+      targetPort: 9870
+    - name: ncache-9871
+      port: 9871
+      targetPort: 9871
+    - name: ncache-9872
+      port: 9872
+      targetPort: 9872
+    - name: ncache-9873
+      port: 9873
+      targetPort: 9873
+    - name: ncache-9874
+      port: 9874
+      targetPort: 9874
+    - name: ncache-9875
+      port: 9875
+      targetPort: 9875
+    - name: ncache-9876
+      port: 9876
+      targetPort: 9876
+    - name: ncache-9877
+      port: 9877
+      targetPort: 9877
+    - name: ncache-9878
+      port: 9878
+      targetPort: 9878
+    - name: ncache-9879
+      port: 9879
+      targetPort: 9879
+    - name: ncache-9880
+      port: 9880
+      targetPort: 9880
+    - name: ncache-9881
+      port: 9881
+      targetPort: 9881
+    - name: ncache-9882
+      port: 9882
+      targetPort: 9882
+    - name: ncache-9883
+      port: 9883
+      targetPort: 9883
+    - name: ncache-9884
+      port: 9884
+      targetPort: 9884
+    - name: ncache-9885
+      port: 9885
+      targetPort: 9885
+    - name: ncache-9886
+      port: 9886
+      targetPort: 9886
+    - name: ncache-9887
+      port: 9887
+      targetPort: 9887
+    - name: ncache-9888
+      port: 9888
+      targetPort: 9888
+    - name: ncache-9889
+      port: 9889
+      targetPort: 9889
+    - name: ncache-9890
+      port: 9890
+      targetPort: 9890
+    - name: ncache-9891
+      port: 9891
+      targetPort: 9891
+    - name: ncache-9892
+      port: 9892
+      targetPort: 9892
+    - name: ncache-9893
+      port: 9893
+      targetPort: 9893
+    - name: ncache-9894
+      port: 9894
+      targetPort: 9894
+    - name: ncache-9895
+      port: 9895
+      targetPort: 9895
+    - name: ncache-9896
+      port: 9896
+      targetPort: 9896
+    - name: ncache-9897
+      port: 9897
+      targetPort: 9897
+    - name: ncache-9898
+      port: 9898
+      targetPort: 9898
+    - name: ncache-9899
+      port: 9899
+      targetPort: 9899
+    - name: ncache-9900
+      port: 9900
+      targetPort: 9900
+    - name: ncache-9901
+      port: 9901
+      targetPort: 9901
+    - name: ncache-9902
+      port: 9902
+      targetPort: 9902
+    - name: ncache-9903
+      port: 9903
+      targetPort: 9903
+    - name: ncache-9904
+      port: 9904
+      targetPort: 9904
+    - name: ncache-9905
+      port: 9905
+      targetPort: 9905
+    - name: ncache-9906
+      port: 9906
+      targetPort: 9906
+    - name: ncache-9907
+      port: 9907
+      targetPort: 9907
+    - name: ncache-9908
+      port: 9908
+      targetPort: 9908
+    - name: ncache-9909
+      port: 9909
+      targetPort: 9909
+    - name: ncache-9910
+      port: 9910
+      targetPort: 9910
+    - name: ncache-9911
+      port: 9911
+      targetPort: 9911
+    - name: ncache-9912
+      port: 9912
+      targetPort: 9912
+    - name: ncache-9913
+      port: 9913
+      targetPort: 9913
+    - name: ncache-9914
+      port: 9914
+      targetPort: 9914
+    - name: ncache-9915
+      port: 9915
+      targetPort: 9915
+    - name: ncache-9916
+      port: 9916
+      targetPort: 9916
+    - name: ncache-9917
+      port: 9917
+      targetPort: 9917
+    - name: ncache-9918
+      port: 9918
+      targetPort: 9918
+    - name: ncache-9919
+      port: 9919
+      targetPort: 9919
+    - name: ncache-9920
+      port: 9920
+      targetPort: 9920
+    - name: ncache-9921
+      port: 9921
+      targetPort: 9921
+    - name: ncache-9922
+      port: 9922
+      targetPort: 9922
+    - name: ncache-9923
+      port: 9923
+      targetPort: 9923
+    - name: ncache-9924
+      port: 9924
+      targetPort: 9924
+    - name: ncache-9925
+      port: 9925
+      targetPort: 9925
+    - name: ncache-9926
+      port: 9926
+      targetPort: 9926
+    - name: ncache-9927
+      port: 9927
+      targetPort: 9927
+    - name: ncache-9928
+      port: 9928
+      targetPort: 9928
+    - name: ncache-9929
+      port: 9929
+      targetPort: 9929
+    - name: ncache-9930
+      port: 9930
+      targetPort: 9930
+    - name: ncache-9931
+      port: 9931
+      targetPort: 9931
+    - name: ncache-9932
+      port: 9932
+      targetPort: 9932
+    - name: ncache-9933
+      port: 9933
+      targetPort: 9933
+    - name: ncache-9934
+      port: 9934
+      targetPort: 9934
+    - name: ncache-9935
+      port: 9935
+      targetPort: 9935
+    - name: ncache-9936
+      port: 9936
+      targetPort: 9936
+    - name: ncache-9937
+      port: 9937
+      targetPort: 9937
+    - name: ncache-9938
+      port: 9938
+      targetPort: 9938
+    - name: ncache-9939
+      port: 9939
+      targetPort: 9939
+    - name: ncache-9940
+      port: 9940
+      targetPort: 9940
+    - name: ncache-9941
+      port: 9941
+      targetPort: 9941
+    - name: ncache-9942
+      port: 9942
+      targetPort: 9942
+    - name: ncache-9943
+      port: 9943
+      targetPort: 9943
+    - name: ncache-9944
+      port: 9944
+      targetPort: 9944
+    - name: ncache-9945
+      port: 9945
+      targetPort: 9945
+    - name: ncache-9946
+      port: 9946
+      targetPort: 9946
+    - name: ncache-9947
+      port: 9947
+      targetPort: 9947
+    - name: ncache-9948
+      port: 9948
+      targetPort: 9948
+    - name: ncache-9949
+      port: 9949
+      targetPort: 9949
+    - name: ncache-9950
+      port: 9950
+      targetPort: 9950
+    - name: ncache-9951
+      port: 9951
+      targetPort: 9951
+    - name: ncache-9952
+      port: 9952
+      targetPort: 9952
+    - name: ncache-9953
+      port: 9953
+      targetPort: 9953
+    - name: ncache-9954
+      port: 9954
+      targetPort: 9954
+    - name: ncache-9955
+      port: 9955
+      targetPort: 9955
+    - name: ncache-9956
+      port: 9956
+      targetPort: 9956
+    - name: ncache-9957
+      port: 9957
+      targetPort: 9957
+    - name: ncache-9958
+      port: 9958
+      targetPort: 9958
+    - name: ncache-9959
+      port: 9959
+      targetPort: 9959
+    - name: ncache-9960
+      port: 9960
+      targetPort: 9960
+    - name: ncache-9961
+      port: 9961
+      targetPort: 9961
+    - name: ncache-9962
+      port: 9962
+      targetPort: 9962
+    - name: ncache-9963
+      port: 9963
+      targetPort: 9963
+    - name: ncache-9964
+      port: 9964
+      targetPort: 9964
+    - name: ncache-9965
+      port: 9965
+      targetPort: 9965
+    - name: ncache-9966
+      port: 9966
+      targetPort: 9966
+    - name: ncache-9967
+      port: 9967
+      targetPort: 9967
+    - name: ncache-9968
+      port: 9968
+      targetPort: 9968
+    - name: ncache-9969
+      port: 9969
+      targetPort: 9969
+    - name: ncache-9970
+      port: 9970
+      targetPort: 9970
+    - name: ncache-9971
+      port: 9971
+      targetPort: 9971
+    - name: ncache-9972
+      port: 9972
+      targetPort: 9972
+    - name: ncache-9973
+      port: 9973
+      targetPort: 9973
+    - name: ncache-9974
+      port: 9974
+      targetPort: 9974
+    - name: ncache-9975
+      port: 9975
+      targetPort: 9975
+    - name: ncache-9976
+      port: 9976
+      targetPort: 9976
+    - name: ncache-9977
+      port: 9977
+      targetPort: 9977
+    - name: ncache-9978
+      port: 9978
+      targetPort: 9978
+    - name: ncache-9979
+      port: 9979
+      targetPort: 9979
+    - name: ncache-9980
+      port: 9980
+      targetPort: 9980
+    - name: ncache-9981
+      port: 9981
+      targetPort: 9981
+    - name: ncache-9982
+      port: 9982
+      targetPort: 9982
+    - name: ncache-9983
+      port: 9983
+      targetPort: 9983
+    - name: ncache-9984
+      port: 9984
+      targetPort: 9984
+    - name: ncache-9985
+      port: 9985
+      targetPort: 9985
+    - name: ncache-9986
+      port: 9986
+      targetPort: 9986
+    - name: ncache-9987
+      port: 9987
+      targetPort: 9987
+    - name: ncache-9988
+      port: 9988
+      targetPort: 9988
+    - name: ncache-9989
+      port: 9989
+      targetPort: 9989
+    - name: ncache-9990
+      port: 9990
+      targetPort: 9990
+    - name: ncache-9991
+      port: 9991
+      targetPort: 9991
+    - name: ncache-9992
+      port: 9992
+      targetPort: 9992
+    - name: ncache-9993
+      port: 9993
+      targetPort: 9993
+    - name: ncache-9994
+      port: 9994
+      targetPort: 9994
+    - name: ncache-9995
+      port: 9995
+      targetPort: 9995
+    - name: ncache-9996
+      port: 9996
+      targetPort: 9996
+    - name: ncache-9997
+      port: 9997
+      targetPort: 9997

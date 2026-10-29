@@ -1,0 +1,162 @@
+# NCache client gateway. Matches the Helm chart (deployment.platform=EKS, gateway.ports=9803-9849: 48 NLB listeners, under the default quota of 50).
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ncache-client-gateway
+  namespace: default
+  labels:
+    app: ncache
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+spec:
+  type: LoadBalancer
+  selector:
+    app: ncache
+  ports:
+    - name: client
+      port: 9800
+      targetPort: 9800
+    - name: ncache-9803
+      port: 9803
+      targetPort: 9803
+    - name: ncache-9804
+      port: 9804
+      targetPort: 9804
+    - name: ncache-9805
+      port: 9805
+      targetPort: 9805
+    - name: ncache-9806
+      port: 9806
+      targetPort: 9806
+    - name: ncache-9807
+      port: 9807
+      targetPort: 9807
+    - name: ncache-9808
+      port: 9808
+      targetPort: 9808
+    - name: ncache-9809
+      port: 9809
+      targetPort: 9809
+    - name: ncache-9810
+      port: 9810
+      targetPort: 9810
+    - name: ncache-9811
+      port: 9811
+      targetPort: 9811
+    - name: ncache-9812
+      port: 9812
+      targetPort: 9812
+    - name: ncache-9813
+      port: 9813
+      targetPort: 9813
+    - name: ncache-9814
+      port: 9814
+      targetPort: 9814
+    - name: ncache-9815
+      port: 9815
+      targetPort: 9815
+    - name: ncache-9816
+      port: 9816
+      targetPort: 9816
+    - name: ncache-9817
+      port: 9817
+      targetPort: 9817
+    - name: ncache-9818
+      port: 9818
+      targetPort: 9818
+    - name: ncache-9819
+      port: 9819
+      targetPort: 9819
+    - name: ncache-9820
+      port: 9820
+      targetPort: 9820
+    - name: ncache-9821
+      port: 9821
+      targetPort: 9821
+    - name: ncache-9822
+      port: 9822
+      targetPort: 9822
+    - name: ncache-9823
+      port: 9823
+      targetPort: 9823
+    - name: ncache-9824
+      port: 9824
+      targetPort: 9824
+    - name: ncache-9825
+      port: 9825
+      targetPort: 9825
+    - name: ncache-9826
+      port: 9826
+      targetPort: 9826
+    - name: ncache-9827
+      port: 9827
+      targetPort: 9827
+    - name: ncache-9828
+      port: 9828
+      targetPort: 9828
+    - name: ncache-9829
+      port: 9829
+      targetPort: 9829
+    - name: ncache-9830
+      port: 9830
+      targetPort: 9830
+    - name: ncache-9831
+      port: 9831
+      targetPort: 9831
+    - name: ncache-9832
+      port: 9832
+      targetPort: 9832
+    - name: ncache-9833
+      port: 9833
+      targetPort: 9833
+    - name: ncache-9834
+      port: 9834
+      targetPort: 9834
+    - name: ncache-9835
+      port: 9835
+      targetPort: 9835
+    - name: ncache-9836
+      port: 9836
+      targetPort: 9836
+    - name: ncache-9837
+      port: 9837
+      targetPort: 9837
+    - name: ncache-9838
+      port: 9838
+      targetPort: 9838
+    - name: ncache-9839
+      port: 9839
+      targetPort: 9839
+    - name: ncache-9840
+      port: 9840
+      targetPort: 9840
+    - name: ncache-9841
+      port: 9841
+      targetPort: 9841
+    - name: ncache-9842
+      port: 9842
+      targetPort: 9842
+    - name: ncache-9843
+      port: 9843
+      targetPort: 9843
+    - name: ncache-9844
+      port: 9844
+      targetPort: 9844
+    - name: ncache-9845
+      port: 9845
+      targetPort: 9845
+    - name: ncache-9846
+      port: 9846
+      targetPort: 9846
+    - name: ncache-9847
+      port: 9847
+      targetPort: 9847
+    - name: ncache-9848
+      port: 9848
+      targetPort: 9848
+    - name: ncache-9849
+      port: 9849
+      targetPort: 9849

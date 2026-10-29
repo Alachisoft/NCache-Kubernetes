@@ -1,11 +1,11 @@
-# NCache Cache Server Deployment
-kind: Deployment
+# StatefulSet
+# Used instead of a Deployment because cache nodes need persistent identities and ordered scaling
 apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: ncache
-  labels:
-    app: ncache
 spec:
+  # Number of NCache server nodes
   replicas: 2
   selector:
     matchLabels:
@@ -15,28 +15,206 @@ spec:
       labels:
         app: ncache
     spec:
-      nodeSelector:
-        "kubernetes.io/os": linux
-      env:
-        NC_KEY: "${NCACHE_KEY}"
+      # Assigns the RBAC permissions defined earlier
+      serviceAccountName: ncache-sa
+      # Gives NCache 30 seconds to gracefully shut down before forceful termination
+      terminationGracePeriodSeconds: 30
+
+      # docker-registry Secret used to pull a private NCache image
+      imagePullSecrets:
+        - name: ncache-secret
+
+      # --- Anti Affinity
+      affinity:
+        podAntiAffinity:
+          # 1. REQUIRED (Strict separation for Production)
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - ncache
+            topologyKey: "kubernetes.io/hostname"
+
+          # 2. PREFERRED (Soft suggestion for DQ and Dev deployments)
+          # preferredDuringSchedulingIgnoredDuringExecution:
+          # - weight: 100
+          #   podAffinityTerm:
+          #     labelSelector:
+          #       matchExpressions:
+          #       - key: app
+          #         operator: In
+          #         values:
+          #         - ncache
+          #     topologyKey: "kubernetes.io/hostname"
+
+      # Mount TLS certificates secret in the NCache deployment
+      volumes:
+        - name: ncache-tls-secret
+          secret:
+            secretName: ncache-tls-secret
+            # Prevents the container from modifying the certificates
+            optional: true
+
       containers:
-      - name: ncache
-        image: ${IMAGE_REPOSITORY}:${IMAGE_TAG}
-        #resources:
-        #  limits:
-        #    memory: "200Mi"
-        #    cpu: "2"
-        #  requests:
-        #    memory: "100Mi"
-        #    cpu: "1"
-        ports:
-        - name: client-tcp
-          containerPort: 9800
-        - name: management-http
-          containerPort: 9801
-        - name: management-tcp
-          containerPort: 9803
-        - name: bridge-client
-          containerPort: 9816
-        - name: bridge-management
-          containerPort: 9817
+        # 1. Main NCache Container
+        - name: ncache
+          image: alachisoft/ncache:5.3.800
+          imagePullPolicy: Always
+
+          # Exposes the necessary ports within the container
+          ports:
+          # cache ports
+            - containerPort: 9800
+            - containerPort: 9801
+            - containerPort: 9803
+          # bridge ports
+            - containerPort: 9817
+            - containerPort: 9816
+
+          env:
+              #- name: NC_USER_PASSWORD
+              #   value: ""            
+
+              # LICENSE CONFIGURATIONS
+            - name: NC_LICENSE_KEY # Primary key for registration
+              value: ""
+            - name: NC_LICENSE_ENV
+              value: ""
+            - name: NC_KEY # Fallback evaluation key
+              value: ""
+
+            # Automatically starts a demo cache upon initialization
+            - name: NC_START_DEFAULT_CACHE
+              value: "true"
+
+            # TLS CONFIGURATIONS
+            - name: NC_ENABLE_TLS
+              value: "false"
+            - name: NC_MUTUAL_TLS
+              value: "false"
+            - name: NC_TLS_CUSTOM_CERTIFICATE
+              value: "/usr/local/share/ca-certificates/server-certificate"
+            - name: NC_TLS_CUSTOM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ncache-tls-secret
+                  key: server-certificate-password
+                  optional: true
+            - name: NC_TLS_CLIENT_CERTIFICATE
+              value: "/usr/local/share/ca-certificates/client-certificate"
+            - name: NC_TLS_CLIENT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ncache-tls-secret
+                  key: client-certificate-password
+                  optional: true
+            - name: NC_TLS_PROTOCOL_VERSION
+              value: ""
+            - name: NC_DEBUG
+              value: "false"
+
+          # Each pod stores certificates in this path
+          volumeMounts:
+            - name: ncache-tls-secret
+              mountPath: /usr/local/share/ca-certificates/
+              readOnly: true
+
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/bash
+                  - -c
+                  - |
+                    sleep 5
+                    /opt/ncache/ext/resources/kubernetes/setup-ncache.sh
+---
+
+# Creates an identity for the NCache pods to interact with the Kubernetes API
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ncache-sa
+# Automatically mounts the token needed to authenticate API requests
+automountServiceAccountToken: true
+
+---
+# Defines cluster-wide permissions that the NCache service account will need
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ncache-role
+rules:
+  # Allows reading pod information (used for node discovery)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get","list","watch"]
+  # Allows executing commands inside pods (used by the sidecar to manage the cluster)
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+  # Allows reading statefulset information
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    verbs: ["get","list"]
+  # Allows managing ConfigMaps (used to store and share the NCache license dynamically)
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get","list","patch","update","create"]
+  # Allows reading namespace information
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch", "update"]
+---
+
+# Attaches the ClusterRole permissions to the ServiceAccount created above
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ncache-binding
+subjects:
+  - kind: ServiceAccount
+    name: ncache-sa
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: ncache-role
+  apiGroup: rbac.authorization.k8s.io
+---
+
+# CONFIG MAP (License Store): Provides a central place to store and share licensing and other inforamtion as well info across NCache nodes
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ncache-store
+  labels:
+    app: ncache
+data: {} # Data will be populated dynamically by the NCache pods
+---
+
+# Headless Service for auto discovery of cache server nodes for client applications
+kind: Service
+apiVersion: v1 # depends on the underlying Kubernetes version
+metadata:
+  name: ncache-cacheserver
+  labels:
+    app: ncache-cacheserver
+spec:
+  # Setting clusterIP to "None" makes this a "Headless" service
+  clusterIP: None
+  selector:
+    app: ncache # same label as provided in the ncache.yaml file (targets NCache server pods)
+  ports:
+  # Port used for NCache management operations
+  - name: management-tcp
+    port: 9803
+    targetPort: 9803
+  # Port used for client applications to connect to the cache
+  - name: client-port
+    port: 9800
+    targetPort: 9800
