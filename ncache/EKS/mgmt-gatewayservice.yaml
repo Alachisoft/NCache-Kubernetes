@@ -1,0 +1,32 @@
+# NCache Management Center and Cloud Portal gateway. Matches the Helm chart (deployment.platform=EKS, default values).
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ncache-mgmt-gateway
+  namespace: default
+  labels:
+    app: ncache
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    service.beta.kubernetes.io/aws-load-balancer-subnets: ""
+spec:
+  type: LoadBalancer
+  selector:
+    app: ncache
+  sessionAffinity: ClientIP
+  ports:
+    - name: mgmt-center-9801
+      port: 9801
+      targetPort: 9801
+    - name: mgmt-center-9802
+      port: 9802
+      targetPort: 9802
+    - name: portal-9998
+      port: 9998
+      targetPort: 9998
+    - name: portal-9999
+      port: 9999
+      targetPort: 9999
