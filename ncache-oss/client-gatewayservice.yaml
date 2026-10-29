@@ -1,0 +1,14 @@
+# Gateway service to access, manage and monitor NCache from your workstation
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: ncache
+  # type: LoadBalancer
+  type: NodePort #LoadBalancer is not working for local K8s cluster
+  ports:
+  - name: management-tcp
+    port: 9800
+    targetPort: 9800

@@ -1,0 +1,230 @@
+# NCache OutProc client setup for Kubernetes: "ncache-client" hosts the local
+# out-of-proc client cache; "myapp" connects to it via NCACHE_CLIENT_HOST,
+# while the actual distributed cache lives on an NCache server outside this
+# cluster. See ncache-client-outproc-HELP.md for build/deploy details.
+
+# ncache-client: a single pod (Deployment default replicas: 1), not one per
+# node like the DaemonSet this replaced. NOTE: myapp (app.yaml) still runs
+# 2 replicas with podAffinity requiring each to land on a node that already
+# has an ncache-client pod, plus podAntiAffinity spreading those 2 replicas
+# across different nodes - with only one ncache-client pod, myapp's second
+# replica has no second matching node and will stay Pending. Revisit
+# myapp.yaml's affinity/replica count if that matters for your use case.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ncache-client
+spec:
+  selector:
+    matchLabels:
+      app: ncache-client
+  template:
+    metadata:
+      labels:
+        app: ncache-client
+    spec:
+      affinity:
+        podAntiAffinity: # each replica must land on a DIFFERENT node
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - ncache-client
+              topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: ncache-secret # alachisoft/ncache is a private repo
+      env:
+        NC_REGISTER_AS: "Client"
+        NC_KEY: ${NCACHE_KEY}
+      containers:
+        - name: ncache-client
+          image: ${IMAGE_REPOSITORY}:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            # reachable directly from outside the cluster.
+            - containerPort: 9800
+              hostPort: 9800
+            - containerPort: 9803 # management port - what NCACHE_CLIENT_HOST reaches
+              hostPort: 9803
+            - containerPort: 9804 # metrics/http
+              hostPort: 9804
+---
+# ncache-client Service: internalTrafficPolicy: Local keeps each myapp pod
+# talking to its own node's ncache-client pod. All ports must be declared
+# explicitly (9831-9880 is the range NCache draws the client cache's
+# dynamically-assigned port from - see Src/NCCommon/Util/ManagementPortHandler.cs).
+apiVersion: v1
+kind: Service
+metadata:
+  name: ncache-client
+spec:
+  internalTrafficPolicy: Local
+  selector:
+    app: ncache-client
+  ports:
+    - name: client
+      port: 9800
+      targetPort: 9800
+    - name: mgmt-http
+      port: 9801
+      targetPort: 9801
+    - name: management
+      port: 9803
+      targetPort: 9803
+    - name: metrics
+      port: 9804
+      targetPort: 9804
+    - name: mgmt-9831
+      port: 9831
+      targetPort: 9831
+    - name: mgmt-9832
+      port: 9832
+      targetPort: 9832
+    - name: mgmt-9833
+      port: 9833
+      targetPort: 9833
+    - name: mgmt-9834
+      port: 9834
+      targetPort: 9834
+    - name: mgmt-9835
+      port: 9835
+      targetPort: 9835
+    - name: mgmt-9836
+      port: 9836
+      targetPort: 9836
+    - name: mgmt-9837
+      port: 9837
+      targetPort: 9837
+    - name: mgmt-9838
+      port: 9838
+      targetPort: 9838
+    - name: mgmt-9839
+      port: 9839
+      targetPort: 9839
+    - name: mgmt-9840
+      port: 9840
+      targetPort: 9840
+    - name: mgmt-9841
+      port: 9841
+      targetPort: 9841
+    - name: mgmt-9842
+      port: 9842
+      targetPort: 9842
+    - name: mgmt-9843
+      port: 9843
+      targetPort: 9843
+    - name: mgmt-9844
+      port: 9844
+      targetPort: 9844
+    - name: mgmt-9845
+      port: 9845
+      targetPort: 9845
+    - name: mgmt-9846
+      port: 9846
+      targetPort: 9846
+    - name: mgmt-9847
+      port: 9847
+      targetPort: 9847
+    - name: mgmt-9848
+      port: 9848
+      targetPort: 9848
+    - name: mgmt-9849
+      port: 9849
+      targetPort: 9849
+    - name: mgmt-9850
+      port: 9850
+      targetPort: 9850
+    - name: mgmt-9851
+      port: 9851
+      targetPort: 9851
+    - name: mgmt-9852
+      port: 9852
+      targetPort: 9852
+    - name: mgmt-9853
+      port: 9853
+      targetPort: 9853
+    - name: mgmt-9854
+      port: 9854
+      targetPort: 9854
+    - name: mgmt-9855
+      port: 9855
+      targetPort: 9855
+    - name: mgmt-9856
+      port: 9856
+      targetPort: 9856
+    - name: mgmt-9857
+      port: 9857
+      targetPort: 9857
+    - name: mgmt-9858
+      port: 9858
+      targetPort: 9858
+    - name: mgmt-9859
+      port: 9859
+      targetPort: 9859
+    - name: mgmt-9860
+      port: 9860
+      targetPort: 9860
+    - name: mgmt-9861
+      port: 9861
+      targetPort: 9861
+    - name: mgmt-9862
+      port: 9862
+      targetPort: 9862
+    - name: mgmt-9863
+      port: 9863
+      targetPort: 9863
+    - name: mgmt-9864
+      port: 9864
+      targetPort: 9864
+    - name: mgmt-9865
+      port: 9865
+      targetPort: 9865
+    - name: mgmt-9866
+      port: 9866
+      targetPort: 9866
+    - name: mgmt-9867
+      port: 9867
+      targetPort: 9867
+    - name: mgmt-9868
+      port: 9868
+      targetPort: 9868
+    - name: mgmt-9869
+      port: 9869
+      targetPort: 9869
+    - name: mgmt-9870
+      port: 9870
+      targetPort: 9870
+    - name: mgmt-9871
+      port: 9871
+      targetPort: 9871
+    - name: mgmt-9872
+      port: 9872
+      targetPort: 9872
+    - name: mgmt-9873
+      port: 9873
+      targetPort: 9873
+    - name: mgmt-9874
+      port: 9874
+      targetPort: 9874
+    - name: mgmt-9875
+      port: 9875
+      targetPort: 9875
+    - name: mgmt-9876
+      port: 9876
+      targetPort: 9876
+    - name: mgmt-9877
+      port: 9877
+      targetPort: 9877
+    - name: mgmt-9878
+      port: 9878
+      targetPort: 9878
+    - name: mgmt-9879
+      port: 9879
+      targetPort: 9879
+    - name: mgmt-9880
+      port: 9880
+      targetPort: 9880
+---
