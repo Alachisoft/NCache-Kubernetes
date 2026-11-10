@@ -1,15 +1,9 @@
 # NCache OutProc client setup for Kubernetes: "ncache-client" hosts the local
 # out-of-proc client cache; "myapp" connects to it via NCACHE_CLIENT_HOST,
 # while the actual distributed cache lives on an NCache server outside this
-# cluster. See ncache-client-outproc-HELP.md for build/deploy details.
+# cluster. See README.md for deploy details.
 
-# ncache-client: a single pod (Deployment default replicas: 1), not one per
-# node like the DaemonSet this replaced. NOTE: myapp (app.yaml) still runs
-# 2 replicas with podAffinity requiring each to land on a node that already
-# has an ncache-client pod, plus podAntiAffinity spreading those 2 replicas
-# across different nodes - with only one ncache-client pod, myapp's second
-# replica has no second matching node and will stay Pending. Revisit
-# myapp.yaml's affinity/replica count if that matters for your use case.
+# ncache-client: a single pod (Deployment default replicas: 1).
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,13 +30,15 @@ spec:
       terminationGracePeriodSeconds: 10
       imagePullSecrets:
         - name: ncache-secret # alachisoft/ncache is a private repo
-      env:
-        NC_REGISTER_AS: "Client"
-        NC_KEY: ${NCACHE_KEY}
       containers:
         - name: ncache-client
           image: ${IMAGE_REPOSITORY}:${IMAGE_TAG}
           imagePullPolicy: Always
+          env:
+            - name: NC_REGISTER_AS
+              value: "Client"
+            - name: NC_KEY
+              value: "${NCACHE_KEY}"
           ports:
             # reachable directly from outside the cluster.
             - containerPort: 9800
@@ -55,7 +51,7 @@ spec:
 # ncache-client Service: internalTrafficPolicy: Local keeps each myapp pod
 # talking to its own node's ncache-client pod. All ports must be declared
 # explicitly (9831-9880 is the range NCache draws the client cache's
-# dynamically-assigned port from - see Src/NCCommon/Util/ManagementPortHandler.cs).
+# dynamically-assigned port from).
 apiVersion: v1
 kind: Service
 metadata:

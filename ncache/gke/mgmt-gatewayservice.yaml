@@ -1,4 +1,4 @@
-# NCache Management Center and Cloud Portal gateway. Matches the Helm chart (deployment.platform=AKS, default values).
+# NCache Management Center and Cloud Portal gateway. Matches the Helm chart (deployment.platform=GKE, default values).
 ---
 apiVersion: v1
 kind: Service
@@ -8,10 +8,9 @@ metadata:
   labels:
     app: ncache
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "false"
+    networking.gke.io/load-balancer-type: "External"
 spec:
   type: LoadBalancer
-  loadBalancerIP: ""
   selector:
     app: ncache
   sessionAffinity: ClientIP
