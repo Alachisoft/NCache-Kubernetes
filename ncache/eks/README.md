@@ -10,6 +10,27 @@ Creates an EKS (Amazon Elastic Kubernetes Service) cluster and deploys NCache on
 | `client-gatewayservice.yaml` | Internal AWS Network Load Balancer for NCache clients (ports 9800, 9803-9849; 48 listeners, under the default quota of 50). |
 | `mgmt-gatewayservice.yaml` | Internet-facing AWS Network Load Balancer for the Management Center (9801, 9802) and the Cloud Portal (9998, 9999). |
 
+## What the scripts do
+
+### `create-cluster.sh`
+
+1. **Sign in:** none; it uses the AWS CLI credentials you already have.
+2. **IAM role:** looks up the role named in `IAM_ROLE`.
+3. **Cluster:** creates the EKS cluster in your VPC and subnets, unless it already exists. Takes 10-15 minutes.
+4. **Nodes:** creates the `ncache-nodes` node group with `NODE_COUNT` nodes of type `NODE_TYPE`. Takes 3-5 minutes.
+5. **kubectl:** connects `kubectl` to the new cluster.
+6. **Subnet tags:** tags your subnets so AWS can place load balancers in them.
+7. **Load balancer controller:** installs the AWS Load Balancer Controller with Helm; it creates the AWS load balancers.
+8. **Check:** lists the nodes.
+
+### `deploy-ncache.sh`
+
+1. Checks that you gave the platform, that `NCACHE_KEY` is set and that `helm` is installed.
+2. Installs NCache with the NCache Helm chart (version 5.3.8), using your key and the platform.
+3. The chart creates 2 NCache servers, each on a different node, and the two gateway load balancers:
+   - client gateway: internal AWS Network Load Balancer (reachable inside your VPC)
+   - management gateway: internet-facing AWS Network Load Balancer
+
 ## Run
 
 1. Set `CLUSTER_NAME`, `REGION`, `VPC_ID`, `SUBNET_IDS`, `IAM_ROLE`, `NODE_COUNT` and `NODE_TYPE` ([VM sizes](#vm-sizes-node_type)) at the top of `create-cluster.sh`, then:

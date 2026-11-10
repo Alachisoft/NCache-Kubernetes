@@ -10,6 +10,33 @@ Builds a Kubernetes cluster with kubeadm on your own Ubuntu machines and deploys
 | `client-gatewayservice.yaml` | MetalLB load balancer for NCache clients (ports 9800, 9803-9997). |
 | `mgmt-gatewayservice.yaml` | MetalLB load balancer for the Management Center (9801, 9802) and the Cloud Portal (9998, 9999). Shares one IP with the client gateway. |
 
+## What the scripts do
+
+### `create-cluster.sh`
+
+Run it with `sudo` on every machine. On every machine (`control-plane` and `worker`) it:
+
+1. Installs the required packages.
+2. Turns off swap and turns on the network settings Kubernetes needs.
+3. Installs containerd, which runs the containers.
+4. Installs kubeadm, kubelet and kubectl (latest stable version) and locks their version.
+
+`worker` stops here. `control-plane` then:
+
+5. **Cluster:** creates the cluster with `kubeadm init`.
+6. **kubectl:** sets up `kubectl` for root and for the user who ran `sudo`.
+7. **Network:** installs Calico and waits until the node is Ready.
+8. **Load balancers:** installs MetalLB and gives it the addresses in `IP_RANGE`.
+9. **Join command:** prints the command that joins a worker node.
+
+### `deploy-ncache.sh`
+
+1. Checks that you gave the platform, that `NCACHE_KEY` is set and that `helm` is installed.
+2. Installs NCache with the NCache Helm chart (version 5.3.8), using your key and the platform.
+3. The chart creates 2 NCache servers, each on a different worker, and the two gateway load balancers:
+   - client gateway: MetalLB, with an IP from `IP_RANGE`
+   - management gateway: MetalLB, sharing the client gateway's IP
+
 ## Run
 
 1. Set `IP_RANGE` (free addresses on the nodes' network) at the top of `create-cluster.sh`. On the control-plane node:

@@ -59,12 +59,3 @@ to your workload and business needs.
 ## Related Repos
 - [alachisoft/ncache](https://hub.docker.com/r/alachisoft/ncache) for NCache Docker Images
 - [Alachisoft/NCache-Docker](https://github.com/Alachisoft/NCache-Docker) for NCache Dockerfiles
-- [kubernetes/kubernetes](https://github.com/kubernetes/kubernetes)
-
-## Additional Resources
-- [NCache Deployment in Azure Kubernetes Service](https://www.alachisoft.com/resources/docs/ncache/containerization/azure/index.html)
-- [NCache Deployment in Elastic Kubernetes Service](https://www.alachisoft.com/resources/docs/ncache/containerization/amazon-eks/index.html)
-
-## Feedback
-- [File an issue](https://github.com/Alachisoft/NCache-Kubernetes/issues).
-- [Contact Alachisoft Support](https://www.alachisoft.com/company/contact-us.html)

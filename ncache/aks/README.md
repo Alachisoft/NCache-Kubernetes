@@ -10,6 +10,26 @@ Creates an AKS (Azure Kubernetes Service) cluster and deploys NCache on it.
 | `client-gatewayservice.yaml` | Public Azure load balancer for NCache clients (ports 9800, 9803-9997). |
 | `mgmt-gatewayservice.yaml` | Public Azure load balancer for the Management Center (9801, 9802) and the Cloud Portal (9998, 9999). |
 
+## What the scripts do
+
+### `create-cluster.sh`
+
+1. **Sign in:** logs in to Azure, only if you are not signed in already.
+2. **Resource group:** creates the resource group that holds the cluster.
+3. **Cluster:** creates the AKS cluster with `NODE_COUNT` nodes of size `VM_SIZE` and a Standard load balancer. Takes 5-10 minutes.
+4. **kubectl:** connects `kubectl` to the new cluster.
+5. **Check:** lists the nodes.
+
+Azure creates the load balancers itself; nothing extra is installed.
+
+### `deploy-ncache.sh`
+
+1. Checks that you gave the platform, that `NCACHE_KEY` is set and that `helm` is installed.
+2. Installs NCache with the NCache Helm chart (version 5.3.8), using your key and the platform.
+3. The chart creates 2 NCache servers, each on a different node, and the two gateway load balancers:
+   - client gateway: public Azure load balancer
+   - management gateway: public Azure load balancer
+
 ## Run
 
 1. Set `CLUSTER_NAME`, `REGION`, `RESOURCE_GROUP`, `NODE_COUNT` and `VM_SIZE` ([VM sizes](#vm-sizes-vm_size)) at the top of `create-cluster.sh`, then:
