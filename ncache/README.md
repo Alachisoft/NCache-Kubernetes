@@ -30,12 +30,12 @@ Every platform folder has the same files:
 
 | Folder | `create-cluster.sh` creates | Load balancers come from |
 |---|---|---|
-| [aks](aks/README.md) | AKS cluster in a new resource group | Azure Standard load balancer |
-| [eks](eks/README.md) | EKS cluster and node group in an existing VPC | AWS Load Balancer Controller (installed by the script) |
-| [gke](gke/README.md) | GKE Standard cluster in the project's default network | Google Cloud load balancer |
-| [kubernetes](kubernetes/README.md) | kubeadm cluster on your Ubuntu machines (run on every node) | MetalLB (installed by the script) |
+| [aks](aks/) | AKS cluster in a new resource group | Azure Standard load balancer |
+| [eks](eks/) | EKS cluster and node group in an existing VPC | AWS Load Balancer Controller (installed by the script) |
+| [gke](gke/) | GKE Standard cluster in the project's default network | Google Cloud load balancer |
+| [kubernetes](kubernetes/) | kubeadm cluster on your Ubuntu machines (run on every node) | MetalLB (installed by the script) |
 
-[outproc-client](outproc-client/README.md) has no cluster script. Apply it to a cluster that already runs NCache.
+[outproc-client](outproc-client/) has no cluster script. Apply it to a cluster that already runs NCache.
 
 ## Two ways to deploy NCache
 

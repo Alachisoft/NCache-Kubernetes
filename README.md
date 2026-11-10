@@ -6,8 +6,8 @@ Kubernetes.
 
 | Edition | Directory | Docker image |
 |---|---|---|
-| NCache | [ncache/](ncache/README.md) | `alachisoft/ncache:5.3.800` |
-| NCache Open Source (OSS) | [ncache-oss/](ncache-oss/README.md) | `alachisoft/ncache:5.3.603-oss` |
+| NCache | [ncache/](ncache/) | `alachisoft/ncache:5.3.800` |
+| NCache Open Source (OSS) | [ncache-oss/](ncache-oss/) | `alachisoft/ncache:5.3.603-oss` |
 
 ## Repository structure
 
@@ -21,14 +21,14 @@ Kubernetes.
 │   ├── gke/                           create a GKE cluster, deploy NCache on it
 │   ├── kubernetes/                    build an on-premises cluster (kubeadm, Calico, MetalLB), deploy NCache on it
 │   └── outproc-client/                optional: out-of-proc client cache and a sample app
-└── ncache-oss/                        NCache Open Source: YAML files for any Kubernetes cluster
+└── ncache-oss/                        NCache Open Source: cluster scripts for AKS, EKS, GKE and on-premises, and YAML files
 ```
 
 Every folder has a README that says what each file does and which commands to run.
 
 ## Quick start
 
-**NCache:** open the folder for your platform under [ncache/](ncache/README.md) and run its two
+**NCache:** open the folder for your platform under [ncache/](ncache/) and run its two
 scripts in order, for example on AKS:
 
 ```bash
