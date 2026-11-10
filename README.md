@@ -46,7 +46,7 @@ bash deploy-ncache.sh aks
 **NCache Open Source:**
 
 ```bash
-kubectl apply -f ncache-oss/ncache.yaml -f ncache-oss/discoveryservice.yaml -f ncache-oss/client-gatewayservice.yaml
+kubectl apply -f ncache-oss/ncache.yaml -f ncache-oss/discoveryservice.yaml
 ```
 
 ### NOTE
