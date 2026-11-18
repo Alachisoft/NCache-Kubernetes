@@ -19,4 +19,4 @@ if ! command -v helm > /dev/null; then echo "Error: helm is not installed." >&2;
 echo "Deploying NCache  $CHART_VERSION on $PLATFORM..."
 if ! helm install ncache oci://registry-1.docker.io/alachisoft/ncache-helm --version "$CHART_VERSION" --set deployment.key="$NCACHE_KEY" --set deployment.platform="$PLATFORM"; then echo "Error: NCache  deployment failed." >&2; exit 1; fi
 
-echo "NCache  Helm release installed. Pods may still be starting; check them with: kubectl get pods"
+echo "NCache Helm release installed. Pods may still be starting; check them with: kubectl get pods"
