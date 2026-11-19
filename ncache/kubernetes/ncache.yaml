@@ -98,7 +98,7 @@ spec:
               # Set to /usr/local/share/ca-certificates/server-certificate for a custom server PEM.
               value: ""
             - name: NC_TLS_CUSTOM_CA_CERTIFICATE
-              # Set to /usr/local/share/ca-certificates/server-ca-certificate when supplied in the Secret.
+              # Path of the server CA .crt file inside the container.
               value: ""
             - name: NC_TLS_CUSTOM_PASSWORD
               valueFrom:
@@ -110,7 +110,7 @@ spec:
               # Set to /usr/local/share/ca-certificates/client-certificate for mutual TLS.
               value: ""
             - name: NC_TLS_CLIENT_CA_CERTIFICATE
-              # Set to /usr/local/share/ca-certificates/client-ca-certificate when supplied in the Secret.
+              # Path of the client CA .crt file inside the container (mutual TLS).
               value: ""
             - name: NC_TLS_CLIENT_PASSWORD
               valueFrom:
