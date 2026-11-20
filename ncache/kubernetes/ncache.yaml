@@ -60,7 +60,7 @@ spec:
       containers:
         # 1. Main NCache Container
         - name: ncache
-          image: alachisoft/ncache:5.3.800
+          image: alachisoft/ncache:5.3.801
           imagePullPolicy: Always
 
           # Exposes the necessary ports within the container
@@ -95,7 +95,11 @@ spec:
             - name: NC_MUTUAL_TLS
               value: "false"
             - name: NC_TLS_CUSTOM_CERTIFICATE
-              value: "/usr/local/share/ca-certificates/server-certificate"
+              # Set to /usr/local/share/ca-certificates/server-certificate for a custom server PEM.
+              value: ""
+            - name: NC_TLS_CUSTOM_CA_CERTIFICATE
+              # Path of the server CA .crt file inside the container.
+              value: ""
             - name: NC_TLS_CUSTOM_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -103,7 +107,11 @@ spec:
                   key: server-certificate-password
                   optional: true
             - name: NC_TLS_CLIENT_CERTIFICATE
-              value: "/usr/local/share/ca-certificates/client-certificate"
+              # Set to /usr/local/share/ca-certificates/client-certificate for mutual TLS.
+              value: ""
+            - name: NC_TLS_CLIENT_CA_CERTIFICATE
+              # Path of the client CA .crt file inside the container (mutual TLS).
+              value: ""
             - name: NC_TLS_CLIENT_PASSWORD
               valueFrom:
                 secretKeyRef:
